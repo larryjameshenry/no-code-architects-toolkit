@@ -182,19 +182,10 @@ RUN python -c "import os; print(os.environ.get('WHISPER_CACHE_DIR')); import whi
 COPY . .
 
 # Expose the port the app runs on
-EXPOSE 8080
+EXPOSE 9999
 
 # Set environment variables
 ENV PYTHONUNBUFFERED=1
-
-RUN echo '#!/bin/bash\n\
-gunicorn --bind 0.0.0.0:8080 \
-    --workers ${GUNICORN_WORKERS:-2} \
-    --timeout ${GUNICORN_TIMEOUT:-300} \
-    --worker-class sync \
-    --keep-alive 80 \
-    app:app' > /app/run_gunicorn.sh && \
-    chmod +x /app/run_gunicorn.sh
 
 # Run the shell script
 CMD ["/app/run_gunicorn.sh"]
