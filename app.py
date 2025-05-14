@@ -198,7 +198,7 @@ def create_app():
     from routes.caption_video import caption_bp 
     from routes.extract_keyframes import extract_keyframes_bp
     from routes.image_to_video import image_to_video_bp
-    
+    from routes.download import download_bp
 
     # Register blueprints
     app.register_blueprint(convert_bp)
@@ -209,7 +209,7 @@ def create_app():
     app.register_blueprint(caption_bp)
     app.register_blueprint(extract_keyframes_bp)
     app.register_blueprint(image_to_video_bp)
-    
+    app.register_blueprint(download_bp)
     
 
     # version 1.0
@@ -235,6 +235,7 @@ def create_app():
     from routes.v1.toolkit.job_status import v1_toolkit_job_status_bp
     from routes.v1.toolkit.jobs_status import v1_toolkit_jobs_status_bp
 
+
     app.register_blueprint(v1_ffmpeg_compose_bp)
     app.register_blueprint(v1_media_transcribe_bp)
     app.register_blueprint(v1_media_feedback_bp)
@@ -248,7 +249,6 @@ def create_app():
     app.register_blueprint(v1_video_caption_bp)
     app.register_blueprint(v1_image_convert_video_bp)
     app.register_blueprint(v1_toolkit_test_bp)
-    app.register_blueprint(v1_toolkit_auth_bp)
     app.register_blueprint(v1_code_execute_bp)
     app.register_blueprint(v1_s3_upload_bp)
     app.register_blueprint(v1_video_thumbnail_bp)
