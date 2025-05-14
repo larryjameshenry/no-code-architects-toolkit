@@ -127,27 +127,6 @@ APP_URL=https://${APP_DOMAIN}
 # SSL settings
 SSL_EMAIL=user@example.com
 
-# API_KEY
-# Purpose: Used for API authentication.
-# Requirement: Mandatory.
-API_KEY=your_api_key_here
-
-# s3 Compatible Storage Env Vars
-#
-#S3_ACCESS_KEY=your_access_key
-#S3_SECRET_KEY=your_secret_key
-#S3_ENDPOINT=https://your-endpoint-url
-#S3_REGION=your-region
-#S3_BUCKET=your-bucket-name
-
-
-# Google Cloud Storage Env Variables
-#
-# GCP_SA_CREDENTIALS
-# Purpose: The JSON credentials for the GCP Service Account.
-# Requirement: Mandatory if using GCP storage.
-#GCP_SA_CREDENTIALS=/path/to/your/gcp/service_account.json
-
 # GCP_BUCKET_NAME
 # Purpose: The name of the GCP storage bucket.
 # Requirement: Mandatory if using GCP storage.
