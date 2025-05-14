@@ -72,9 +72,6 @@ def process_image_to_video(image_url, length, frame_rate, zoom_speed, job_id, we
 
         logger.info(f"Video created successfully: {output_path}")
 
-        # Clean up input file
-        os.remove(image_path)
-
         return output_path
     except Exception as e:
         logger.error(f"Error in process_image_to_video: {str(e)}", exc_info=True)

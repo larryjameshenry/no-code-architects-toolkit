@@ -20,13 +20,11 @@ from flask import Blueprint
 from app_utils import *
 import logging
 from services.v1.video.split import split_video
-from services.authentication import authenticate
 
 v1_video_split_bp = Blueprint('v1_video_split', __name__)
 logger = logging.getLogger(__name__)
 
 @v1_video_split_bp.route('/v1/video/split', methods=['POST'])
-@authenticate
 @validate_payload({
     "type": "object",
     "properties": {
@@ -84,26 +82,16 @@ def video_split(job_id, data):
         )
         
         # Upload all output files to cloud storage
-        from services.cloud_storage import upload_file
+
         result_files = []
         
         for i, output_file in enumerate(output_files):
-            cloud_url = upload_file(output_file)
             result_files.append({
-                "file_url": cloud_url,
+                "file_url": output_file,
                 "start": splits[i]["start"],
                 "end": splits[i]["end"]
             })
-            # Remove the local file after upload
-            import os
-            os.remove(output_file)
-            logger.info(f"Job {job_id}: Uploaded and removed split file {i+1}")
-        
-        # Clean up input file
-        import os
-        os.remove(input_filename)
-        logger.info(f"Job {job_id}: Removed input file")
-        
+
         # Prepare the response with only file URLs
         response = [{"file_url": item["file_url"]} for item in result_files]
         

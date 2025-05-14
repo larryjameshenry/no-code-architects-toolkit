@@ -92,8 +92,6 @@ def process_transcription(media_url, output_type, max_chars=56, language=None,):
         else:
             raise ValueError("Invalid output type. Must be 'transcript', 'srt', or 'vtt'.")
 
-        os.remove(input_filename)
-        logger.info(f"Removed local file: {input_filename}")
         logger.info(f"Transcription successful, output type: {output_type}")
         return output
     except Exception as e:

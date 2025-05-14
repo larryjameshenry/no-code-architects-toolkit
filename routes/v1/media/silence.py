@@ -20,13 +20,11 @@ from flask import Blueprint
 from app_utils import *
 import logging
 from services.v1.media.silence import detect_silence
-from services.authentication import authenticate
 
 v1_media_silence_bp = Blueprint('v1_media_silence', __name__)
 logger = logging.getLogger(__name__)
 
 @v1_media_silence_bp.route('/v1/media/silence', methods=['POST'])
-@authenticate
 @validate_payload({
     "type": "object",
     "properties": {

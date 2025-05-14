@@ -195,7 +195,6 @@ def create_app():
     from routes.combine_videos import combine_bp
     from routes.audio_mixing import audio_mixing_bp
     from routes.gdrive_upload import gdrive_upload_bp
-    from routes.authenticate import auth_bp
     from routes.caption_video import caption_bp 
     from routes.extract_keyframes import extract_keyframes_bp
     from routes.image_to_video import image_to_video_bp
@@ -207,7 +206,6 @@ def create_app():
     app.register_blueprint(combine_bp)
     app.register_blueprint(audio_mixing_bp)
     app.register_blueprint(gdrive_upload_bp)
-    app.register_blueprint(auth_bp)
     app.register_blueprint(caption_bp)
     app.register_blueprint(extract_keyframes_bp)
     app.register_blueprint(image_to_video_bp)
@@ -223,7 +221,6 @@ def create_app():
     from routes.v1.video.caption_video import v1_video_caption_bp
     from routes.v1.image.convert.image_to_video import v1_image_convert_video_bp
     from routes.v1.toolkit.test import v1_toolkit_test_bp
-    from routes.v1.toolkit.authenticate import v1_toolkit_auth_bp
     from routes.v1.code.execute.execute_python import v1_code_execute_bp
     from routes.v1.s3.upload import v1_s3_upload_bp
     from routes.v1.video.thumbnail import v1_video_thumbnail_bp

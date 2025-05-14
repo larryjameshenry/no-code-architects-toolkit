@@ -2,15 +2,12 @@ from flask import Blueprint
 from app_utils import *
 import logging
 from services.v1.audio.concatenate import process_audio_concatenate
-from services.authentication import authenticate
-from services.cloud_storage import upload_file
 
 v1_audio_concatenate_bp = Blueprint("v1_audio_concatenate", __name__)
 logger = logging.getLogger(__name__)
 
 
 @v1_audio_concatenate_bp.route("/v1/audio/concatenate", methods=["POST"])
-@authenticate
 @validate_payload(
     {
         "type": "object",
@@ -45,12 +42,11 @@ def combine_audio(job_id, data):
         output_file = process_audio_concatenate(media_urls, job_id)
         logger.info(f"Job {job_id}: Audio combination process completed successfully")
 
-        cloud_url = upload_file(output_file)
         logger.info(
-            f"Job {job_id}: Combined audio uploaded to cloud storage: {cloud_url}"
+            f"Job {job_id}: Combined audio output_file: {output_file}"
         )
 
-        return cloud_url, "/v1/audio/concatenate", 200
+        return output_file, "/v1/audio/concatenate", 200
 
     except Exception as e:
         logger.error(f"Job {job_id}: Error during audio combination process - {str(e)}")

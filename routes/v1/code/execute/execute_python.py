@@ -19,7 +19,6 @@
 import os
 import logging
 from flask import Blueprint, request
-from services.authentication import authenticate
 from app_utils import validate_payload, queue_task_wrapper
 import subprocess
 import tempfile
@@ -30,7 +29,6 @@ v1_code_execute_bp = Blueprint('v1_code_execute', __name__)
 logger = logging.getLogger(__name__)
 
 @v1_code_execute_bp.route('/v1/code/execute/python', methods=['POST'])
-@authenticate
 @validate_payload({
     "type": "object",
     "properties": {

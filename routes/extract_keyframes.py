@@ -20,14 +20,11 @@ from flask import Blueprint
 from app_utils import *
 import logging
 from services.extract_keyframes import process_keyframe_extraction
-from services.authentication import authenticate
-from services.cloud_storage import upload_file
 
 extract_keyframes_bp = Blueprint('extract_keyframes', __name__)
 logger = logging.getLogger(__name__)
 
 @extract_keyframes_bp.route('/extract-keyframes', methods=['POST'])
-@authenticate
 @validate_payload({
     "type": "object",
     "properties": {
@@ -53,8 +50,7 @@ def extract_keyframes(job_id, data):
         # Upload each extracted keyframe and collect the cloud URLs
         image_urls = []
         for image_path in image_paths:
-            cloud_url = upload_file(image_path)
-            image_urls.append({"image_url": cloud_url})
+            image_urls.append({"image_url": image_path})
 
         logger.info(f"Job {job_id}: Keyframes uploaded to cloud storage")
 

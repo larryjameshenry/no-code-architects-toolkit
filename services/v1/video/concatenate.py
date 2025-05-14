@@ -49,12 +49,6 @@ def process_video_concatenate(media_urls, job_id, webhook_url=None):
                 run(overwrite_output=True)
         )
 
-        # Clean up input files
-        for f in input_files:
-            os.remove(f)
-            
-        os.remove(concat_file_path)  # Remove the concat list file after the operation
-
         print(f"Video combination successful: {output_path}")
 
         # Check if the output file exists locally before upload

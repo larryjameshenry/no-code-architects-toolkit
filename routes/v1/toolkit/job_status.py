@@ -21,14 +21,12 @@ import json
 import logging
 from flask import Blueprint, request
 from config import LOCAL_STORAGE_PATH
-from services.authentication import authenticate
 from app_utils import queue_task_wrapper, validate_payload
 
 v1_toolkit_job_status_bp = Blueprint('v1_toolkit_job_status', __name__)
 logger = logging.getLogger(__name__)
 
 @v1_toolkit_job_status_bp.route('/v1/toolkit/job/status', methods=['POST'])
-@authenticate
 @validate_payload({
     "type": "object",
     "properties": {

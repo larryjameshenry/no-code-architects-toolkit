@@ -21,15 +21,12 @@ from flask import Blueprint, current_app
 from app_utils import *
 import logging
 from services.ffmpeg_toolkit import process_conversion
-from services.authentication import authenticate
-from services.cloud_storage import upload_file
 import os
 
 convert_bp = Blueprint('convert', __name__)
 logger = logging.getLogger(__name__)
 
 @convert_bp.route('/media-to-mp3', methods=['POST'])
-@authenticate
 @validate_payload({
     "type": "object",
     "properties": {
@@ -54,10 +51,9 @@ def convert_media_to_mp3(job_id, data):
         output_file = process_conversion(media_url, job_id, bitrate)
         logger.info(f"Job {job_id}: Media conversion process completed successfully")
 
-        cloud_url = upload_file(output_file)
-        logger.info(f"Job {job_id}: Converted media uploaded to cloud storage: {cloud_url}")
+        logger.info(f"Job {job_id}: Converted media output_file: {output_file}")
 
-        return cloud_url, "/media-to-mp3", 200
+        return output_file, "/media-to-mp3", 200
 
     except Exception as e:
         logger.error(f"Job {job_id}: Error during media conversion process - {str(e)}")

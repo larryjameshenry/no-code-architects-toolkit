@@ -44,7 +44,6 @@ def process_media_to_mp3(media_url, job_id, bitrate='128k', sample_rate=None):
             .overwrite_output()
             .run(capture_stdout=True, capture_stderr=True)
         )
-        os.remove(input_filename)
         sample_rate_info = f" and sample rate {sample_rate}Hz" if sample_rate is not None else ""
         print(f"Conversion successful: {output_path} with bitrate {bitrate}{sample_rate_info}")
 

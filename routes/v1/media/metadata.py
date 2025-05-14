@@ -20,7 +20,6 @@ from flask import Blueprint, request, jsonify
 from app_utils import validate_payload, queue_task_wrapper
 import logging
 from services.v1.media.metadata import get_media_metadata
-from services.authentication import authenticate
 
 # Set up logger
 logger = logging.getLogger(__name__)
@@ -29,7 +28,6 @@ logger = logging.getLogger(__name__)
 v1_media_metadata_bp = Blueprint('v1_media_metadata', __name__)
 
 @v1_media_metadata_bp.route('/v1/media/metadata', methods=['POST'])
-@authenticate
 @validate_payload({
     "type": "object",
     "properties": {

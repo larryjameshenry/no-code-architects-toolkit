@@ -222,12 +222,6 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 
         # The upload process will be handled by the calling function
         return output_path
-
-        # Clean up local files
-        os.remove(video_path)
-        os.remove(srt_path)
-        os.remove(output_path)
-        logger.info(f"Job {job_id}: Local files cleaned up")
     except Exception as e:
         logger.error(f"Job {job_id}: Error in process_captioning: {str(e)}")
         raise

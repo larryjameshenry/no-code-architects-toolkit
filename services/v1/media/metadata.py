@@ -156,18 +156,8 @@ def get_media_metadata(media_url, job_id=None):
             metadata['has_video'] = has_video
             metadata['has_audio'] = has_audio
         
-        # Clean up the downloaded file
-        if os.path.exists(input_filename):
-            os.remove(input_filename)
-            logger.info(f"Removed temporary file: {input_filename}")
-        
         return metadata
         
     except Exception as e:
         logger.error(f"Metadata extraction failed: {str(e)}")
-        
-        # Clean up temporary file if it exists
-        if 'input_filename' in locals() and os.path.exists(input_filename):
-            os.remove(input_filename)
-            
         raise

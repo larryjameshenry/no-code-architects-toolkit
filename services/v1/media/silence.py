@@ -151,17 +151,10 @@ def detect_silence(media_url, start_time=None, end_time=None, noise_threshold="-
                 "duration": round(duration_float, 2)
             })
         
-        # Clean up the downloaded file
-        os.remove(input_filename)
-        logger.info(f"Removed local file: {input_filename}")
-        
         return silence_intervals
         
     except Exception as e:
         logger.error(f"Silence detection failed: {str(e)}")
-        # Make sure to clean up even on error
-        if os.path.exists(input_filename):
-            os.remove(input_filename)
         raise
 
 def format_time(seconds):

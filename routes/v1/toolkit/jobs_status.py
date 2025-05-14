@@ -22,14 +22,12 @@ import logging
 import time
 from flask import Blueprint, request
 from config import LOCAL_STORAGE_PATH
-from services.authentication import authenticate
 from app_utils import queue_task_wrapper, validate_payload
 
 v1_toolkit_jobs_status_bp = Blueprint('v1_toolkit_jobs_status', __name__)
 logger = logging.getLogger(__name__)
 
 @v1_toolkit_jobs_status_bp.route('/v1/toolkit/jobs/status', methods=['POST'])
-@authenticate
 @queue_task_wrapper(bypass_queue=True)
 def get_all_jobs_status(job_id, data):
     """

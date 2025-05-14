@@ -39,7 +39,6 @@ def process_conversion(media_url, job_id, bitrate='128k', webhook_url=None):
             .overwrite_output()
             .run(capture_stdout=True, capture_stderr=True)
         )
-        os.remove(input_filename)
         print(f"Conversion successful: {output_path} with bitrate {bitrate}")
 
         # Ensure the output file exists locally before attempting upload
@@ -78,12 +77,6 @@ def process_video_combination(media_urls, job_id, webhook_url=None):
                 output(output_path, c='copy').
                 run(overwrite_output=True)
         )
-
-        # Clean up input files
-        for f in input_files:
-            os.remove(f)
-            
-        os.remove(concat_file_path)  # Remove the concat list file after the operation
 
         print(f"Video combination successful: {output_path}")
 

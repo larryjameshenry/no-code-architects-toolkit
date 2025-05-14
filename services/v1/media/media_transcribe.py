@@ -121,8 +121,6 @@ def process_transcribe_media(media_url, task, include_text, include_srt, include
         if include_segments is True:
             segments_json = result['segments']
 
-        os.remove(input_filename)
-        logger.info(f"Removed local file: {input_filename}")
         logger.info(f"{task.capitalize()} successful, output type: {response_type}")
 
         if response_type == "direct":

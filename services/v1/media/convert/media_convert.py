@@ -103,10 +103,6 @@ def process_media_convert(media_url, job_id, output_format='mp4', video_codec='l
         
         # Run the conversion
         ffmpeg.run(stream, overwrite_output=True, capture_stdout=True, capture_stderr=True)
-        
-        # Clean up input file
-        os.remove(input_filename)
-        logger.info(f"Media conversion successful: {output_path} to format {output_format}")
 
         # Ensure the output file exists locally before attempting upload
         if not os.path.exists(output_path):
@@ -126,20 +122,3 @@ def process_media_convert(media_url, job_id, output_format='mp4', video_codec='l
             # Raise with combined error info for better debugging
             raise Exception(f"{error_msg} - {detailed_error}")
         
-        # Clean up input file if it exists
-        if 'input_filename' in locals() and os.path.exists(input_filename):
-            try:
-                os.remove(input_filename)
-                logger.info(f"Cleaned up input file: {input_filename}")
-            except Exception as cleanup_error:
-                logger.error(f"Failed to clean up input file: {str(cleanup_error)}")
-                
-        # Clean up output file if it exists
-        if 'output_path' in locals() and os.path.exists(output_path):
-            try:
-                os.remove(output_path)
-                logger.info(f"Cleaned up output file: {output_path}")
-            except Exception as cleanup_error:
-                logger.error(f"Failed to clean up output file: {str(cleanup_error)}")
-                
-        raise

@@ -28,7 +28,6 @@ logger = logging.getLogger(__name__)
 v1_s3_upload_bp = Blueprint('v1_s3_upload', __name__)
 
 @v1_s3_upload_bp.route('/v1/s3/upload', methods=['POST'])
-@authenticate
 @validate_payload({
     "type": "object",
     "properties": {

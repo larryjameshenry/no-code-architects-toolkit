@@ -22,7 +22,6 @@ import subprocess
 import logging
 import uuid
 from services.file_management import download_file
-from services.cloud_storage import upload_file
 from config import LOCAL_STORAGE_PATH
 
 # Set up logging
@@ -167,12 +166,4 @@ def trim_video(video_url, start=None, end=None, job_id=None, video_codec='libx26
         
     except Exception as e:
         logger.error(f"Video trim operation failed: {str(e)}")
-        
-        # Clean up all temporary files if they exist
-        if 'input_filename' in locals() and os.path.exists(input_filename):
-            os.remove(input_filename)
-                
-        if 'output_filename' in locals() and os.path.exists(output_filename):
-            os.remove(output_filename)
-            
         raise

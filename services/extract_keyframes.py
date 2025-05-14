@@ -47,7 +47,4 @@ def process_keyframe_extraction(video_url, job_id):
             file_path = os.path.join(STORAGE_PATH, filename)
             output_filenames.append(file_path)
 
-    # Clean up input file
-    os.remove(video_path)
-
     return output_filenames

@@ -76,9 +76,4 @@ def process_audio_mixing(video_url, audio_url, video_vol, audio_vol, output_leng
 
     # Run FFmpeg command
     subprocess.run(cmd, check=True)
-
-    # Clean up input files
-    os.remove(video_path)
-    os.remove(audio_path)
-
     return output_path

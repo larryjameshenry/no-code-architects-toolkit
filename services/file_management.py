@@ -75,14 +75,4 @@ def download_file(url, storage_path="/tmp/"):
 
         return local_filename
     except Exception as e:
-        if os.path.exists(local_filename):
-            os.remove(local_filename)
         raise e
-
-
-def delete_old_files():
-    now = time.time()
-    for filename in os.listdir(STORAGE_PATH):
-        file_path = os.path.join(STORAGE_PATH, filename)
-        if os.path.isfile(file_path) and os.stat(file_path).st_mtime < now - 3600:
-            os.remove(file_path)

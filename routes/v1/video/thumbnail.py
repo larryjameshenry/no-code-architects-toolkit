@@ -20,14 +20,11 @@ from flask import Blueprint, jsonify
 from app_utils import *
 import logging
 from services.v1.video.thumbnail import extract_thumbnail
-from services.authentication import authenticate
-from services.cloud_storage import upload_file
 
 v1_video_thumbnail_bp = Blueprint('v1_video_thumbnail', __name__)
 logger = logging.getLogger(__name__)
 
 @v1_video_thumbnail_bp.route('/v1/video/thumbnail', methods=['POST'])
-@authenticate
 @validate_payload({
     "type": "object",
     "properties": {
@@ -51,13 +48,10 @@ def generate_thumbnail(job_id, data):
         # Process thumbnail extraction
         thumbnail_path = extract_thumbnail(video_url, job_id, second)
 
-        # Upload the thumbnail to cloud storage
-        file_url = upload_file(thumbnail_path)
-
-        logger.info(f"Job {job_id}: Thumbnail uploaded to cloud storage at {file_url}")
+        logger.info(f"Job {job_id}: Thumbnail thumbnail_path {thumbnail_path}")
 
         # Return the URL of the uploaded thumbnail
-        return file_url, "/v1/video/thumbnail", 200
+        return thumbnail_path, "/v1/video/thumbnail", 200
         
     except Exception as e:
         logger.error(f"Job {job_id}: Error during thumbnail extraction - {str(e)}")

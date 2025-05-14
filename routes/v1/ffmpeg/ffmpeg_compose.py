@@ -21,14 +21,11 @@ import logging
 from flask import Blueprint, request, jsonify
 from app_utils import *
 from services.v1.ffmpeg.ffmpeg_compose import process_ffmpeg_compose
-from services.authentication import authenticate
-from services.cloud_storage import upload_file
 
 v1_ffmpeg_compose_bp = Blueprint('v1_ffmpeg_compose', __name__)
 logger = logging.getLogger(__name__)
 
 @v1_ffmpeg_compose_bp.route('/v1/ffmpeg/compose', methods=['POST'])
-@authenticate
 @validate_payload({
     "type": "object",
     "properties": {
@@ -123,22 +120,16 @@ def ffmpeg_api(job_id, data):
         output_urls = []
         for i, output_filename in enumerate(output_filenames):
             if os.path.exists(output_filename):
-                upload_url = upload_file(output_filename)
-                output_info = {"file_url": upload_url}
+                output_info = {"file_url": output_filename}
                 
                 if metadata and i < len(metadata):
                     output_metadata = metadata[i]
                     if 'thumbnail' in output_metadata:
                         thumbnail_path = output_metadata['thumbnail']
                         if os.path.exists(thumbnail_path):
-                            thumbnail_url = upload_file(thumbnail_path)
                             del output_metadata['thumbnail']
-                            output_metadata['thumbnail_url'] = thumbnail_url
-                            os.remove(thumbnail_path)  # Clean up local thumbnail file
                     output_info.update(output_metadata)
-                
                 output_urls.append(output_info)
-                os.remove(output_filename)  # Clean up local output file after upload
             else:
                 raise Exception(f"Expected output file {output_filename} not found")
 

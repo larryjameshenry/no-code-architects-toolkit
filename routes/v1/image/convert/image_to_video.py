@@ -20,15 +20,13 @@ from flask import Blueprint
 from app_utils import *
 import logging
 from services.v1.image.convert.image_to_video import process_image_to_video
-from services.authentication import authenticate
-from services.cloud_storage import upload_file
 
 v1_image_convert_video_bp = Blueprint('v1_image_convert_video', __name__)
 logger = logging.getLogger(__name__)
 
 @v1_image_convert_video_bp.route('/v1/image/convert/video', methods=['POST'])
 @v1_image_convert_video_bp.route('/v1/image/transform/video', methods=['POST']) #depleft for backwards compatibility, do not use.
-@authenticate
+
 @validate_payload({
     "type": "object",
     "properties": {
@@ -59,11 +57,8 @@ def image_to_video(job_id, data):
             image_url, length, frame_rate, zoom_speed, job_id, webhook_url
         )
 
-        # Upload the resulting file using the unified upload_file() method
-        cloud_url = upload_file(output_filename)
-
         # Log the successful upload
-        logger.info(f"Job {job_id}: Converted video uploaded to cloud storage: {cloud_url}")
+        logger.info(f"Job {job_id}: Converted video output_filename: {output_filename}")
 
         # Return the cloud URL for the uploaded file
         return cloud_url, "/v1/image/convert/video", 200

@@ -20,14 +20,11 @@ from flask import Blueprint
 from app_utils import *
 import logging
 from services.audio_mixing import process_audio_mixing
-from services.authentication import authenticate
-from services.cloud_storage import upload_file
 
 audio_mixing_bp = Blueprint('audio_mixing', __name__)
 logger = logging.getLogger(__name__)
 
 @audio_mixing_bp.route('/audio-mixing', methods=['POST'])
-@authenticate
 @validate_payload({
     "type": "object",
     "properties": {
@@ -60,13 +57,10 @@ def audio_mixing(job_id, data):
             video_url, audio_url, video_vol, audio_vol, output_length, job_id, webhook_url
         )
 
-        # Upload the mixed file using the unified upload_file() method
-        cloud_url = upload_file(output_filename)
-
-        logger.info(f"Job {job_id}: Mixed media uploaded to cloud storage: {cloud_url}")
+        logger.info(f"Job {job_id}: Mixed media output_filename storage: {output_filename}")
 
         # Return the cloud URL for the uploaded file
-        return cloud_url, "/audio-mixing", 200
+        return output_filename, "/audio-mixing", 200
         
     except Exception as e:
         logger.error(f"Job {job_id}: Error during audio mixing process - {str(e)}")

@@ -20,15 +20,12 @@ from flask import Blueprint, current_app
 from app_utils import *
 import logging
 from services.caption_video import process_captioning
-from services.authentication import authenticate
-from services.cloud_storage import upload_file
 import os
 
 caption_bp = Blueprint('caption', __name__)
 logger = logging.getLogger(__name__)
 
 @caption_bp.route('/caption-video', methods=['POST'])
-@authenticate
 @validate_payload({
     "type": "object",
     "properties": {
@@ -79,13 +76,10 @@ def caption_video(job_id, data):
         output_filename = process_captioning(video_url, captions, caption_type, options, job_id)
         logger.info(f"Job {job_id}: Captioning process completed successfully")
 
-        # Upload the captioned video using the unified upload_file() method
-        cloud_url = upload_file(output_filename)
-
-        logger.info(f"Job {job_id}: Captioned video uploaded to cloud storage: {cloud_url}")
+        logger.info(f"Job {job_id}: Captioned video output_filename storage: {output_filename}")
 
         # Return the cloud URL for the uploaded file
-        return cloud_url, "/caption-video", 200
+        return output_filename, "/caption-video", 200
 
     except Exception as e:
         logger.error(f"Job {job_id}: Error during captioning process - {str(e)}", exc_info=True)

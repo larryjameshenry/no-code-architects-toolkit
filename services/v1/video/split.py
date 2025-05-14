@@ -22,7 +22,6 @@ import subprocess
 import logging
 import uuid
 from services.file_management import download_file
-from services.cloud_storage import upload_file
 from config import LOCAL_STORAGE_PATH
 
 # Set up logging
@@ -169,13 +168,4 @@ def split_video(video_url, splits, job_id=None, video_codec='libx264', video_pre
         
     except Exception as e:
         logger.error(f"Video split operation failed: {str(e)}")
-        
-        # Clean up all temporary files if they exist
-        if 'input_filename' in locals() and os.path.exists(input_filename):
-            os.remove(input_filename)
-                
-        for output_file in output_files:
-            if os.path.exists(output_file):
-                os.remove(output_file)
-                
         raise

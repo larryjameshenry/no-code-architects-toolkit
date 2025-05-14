@@ -6,8 +6,6 @@ import yt_dlp
 import tempfile
 from werkzeug.utils import secure_filename
 import uuid
-from services.cloud_storage import upload_file
-from services.authentication import authenticate
 from services.file_management import download_file
 from urllib.parse import quote
 
@@ -15,7 +13,6 @@ v1_media_download_bp = Blueprint('v1_media_download', __name__)
 logger = logging.getLogger(__name__)
 
 @v1_media_download_bp.route('/v1/BETA/media/download', methods=['POST'])
-@authenticate
 @validate_payload({
     "type": "object",
     "properties": {
@@ -148,17 +145,11 @@ def download_media(job_id, data):
             with yt_dlp.YoutubeDL(ydl_opts) as ydl:
                 info = ydl.extract_info(media_url, download=True)
                 filename = ydl.prepare_filename(info)
-                
-                # Upload to cloud storage
-                cloud_url = upload_file(filename)
-                
-                # Clean up the temporary file
-                os.remove(filename)
 
                 # Prepare response
                 response = {
                     "media": {
-                        "media_url": cloud_url,
+                        "media_url": filename,
                         "title": info.get('title'),
                         "format_id": info.get('format_id'),
                         "ext": info.get('ext'),
@@ -186,14 +177,9 @@ def download_media(job_id, data):
                             try:
                                 # Download the thumbnail first
                                 thumbnail_path = download_file(thumbnail['url'], temp_dir)
-                                # Upload to cloud storage
-                                thumbnail_url = upload_file(thumbnail_path)
-                                # Clean up the temporary thumbnail file
-                                os.remove(thumbnail_path)
-                                
                                 response["thumbnails"].append({
                                     "id": thumbnail.get('id', 'default'),
-                                    "image_url": thumbnail_url,
+                                    "image_url": thumbnail_path,
                                     "width": thumbnail.get('width'),
                                     "height": thumbnail.get('height'),
                                     "original_format": thumbnail.get('ext'),

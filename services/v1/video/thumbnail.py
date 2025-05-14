@@ -48,10 +48,7 @@ def extract_thumbnail(video_url, job_id, second=0):
             .overwrite_output()
             .run(capture_stdout=True, capture_stderr=True)
         )
-        
-        # Clean up the downloaded video file
-        os.remove(video_path)
-        
+    
         # Ensure the thumbnail file exists
         if not os.path.exists(thumbnail_path):
             raise FileNotFoundError(f"Thumbnail file {thumbnail_path} was not created")
@@ -60,7 +57,4 @@ def extract_thumbnail(video_url, job_id, second=0):
         
     except Exception as e:
         print(f"Thumbnail extraction failed: {str(e)}")
-        # Clean up any downloaded files on error
-        if os.path.exists(video_path):
-            os.remove(video_path)
         raise

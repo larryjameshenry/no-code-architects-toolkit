@@ -23,7 +23,6 @@ import logging
 import uuid
 import tempfile
 from services.file_management import download_file
-from services.cloud_storage import upload_file
 from config import LOCAL_STORAGE_PATH
 
 # Set up logging
@@ -254,26 +253,8 @@ def cut_media(video_url, cuts, job_id=None, video_codec='libx264', video_preset=
                 with open(output_filename, 'wb') as f:
                     # Create an empty file
                     pass
-        
-        # Clean up temporary files
-        for temp_file in temp_files:
-            if os.path.exists(temp_file):
-                os.remove(temp_file)
-                logger.info(f"Removed temporary file: {temp_file}")
-        
         return output_filename, input_filename
         
     except Exception as e:
         logger.error(f"Video cut operation failed: {str(e)}")
-        # Clean up all temporary files if they exist
-        for temp_file in temp_files:
-            if os.path.exists(temp_file):
-                os.remove(temp_file)
-                
-        if 'input_filename' in locals() and os.path.exists(input_filename):
-            os.remove(input_filename)
-                    
-        if 'output_filename' in locals() and os.path.exists(output_filename):
-            os.remove(output_filename)
-            
         raise

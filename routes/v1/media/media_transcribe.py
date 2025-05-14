@@ -21,14 +21,11 @@ from app_utils import *
 import logging
 import os
 from services.v1.media.media_transcribe import process_transcribe_media
-from services.authentication import authenticate
-from services.cloud_storage import upload_file
 
 v1_media_transcribe_bp = Blueprint('v1_media_transcribe', __name__)
 logger = logging.getLogger(__name__)
 
 @v1_media_transcribe_bp.route('/v1/media/transcribe', methods=['POST'])
-@authenticate
 @validate_payload({
     "type": "object",
     "properties": {
@@ -67,7 +64,7 @@ def transcribe(job_id, data):
         result = process_transcribe_media(media_url, task, include_text, include_srt, include_segments, word_timestamps, response_type, language, job_id, words_per_line)
         logger.info(f"Job {job_id}: Transcription process completed successfully")
 
-        # If the result is a file path, upload it using the unified upload_file() method
+
         if response_type == "direct":
            
             result_json = {
@@ -83,25 +80,16 @@ def transcribe(job_id, data):
 
         else:
 
-            cloud_urls = {
+            urls = {
                 "text": None,
                 "srt": None,
                 "segments": None,
-                "text_url": upload_file(result[0]) if include_text is True else None,
-                "srt_url": upload_file(result[1]) if include_srt is True else None,
-                "segments_url": upload_file(result[2]) if include_segments is True else None,
+                "text_url": result[0] if include_text is True else None,
+                "srt_url": result[1] if include_srt is True else None,
+                "segments_url": result[2] if include_segments is True else None,
             }
-
-            if include_text is True:
-                os.remove(result[0])  # Remove the temporary file after uploading
             
-            if include_srt is True:
-                os.remove(result[1])
-
-            if include_segments is True:
-                os.remove(result[2])
-            
-            return cloud_urls, "/v1/transcribe/media", 200
+            return urls, "/v1/transcribe/media", 200
 
     except Exception as e:
         logger.error(f"Job {job_id}: Error during transcription process - {str(e)}")

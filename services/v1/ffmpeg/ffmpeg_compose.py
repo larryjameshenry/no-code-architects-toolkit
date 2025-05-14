@@ -144,12 +144,6 @@ def process_ffmpeg_compose(data, job_id):
     except subprocess.CalledProcessError as e:
         raise Exception(f"FFmpeg command failed: {e.stderr}")
     
-    # Clean up input files
-    for input_data in data["inputs"]:
-        input_path = os.path.join(LOCAL_STORAGE_PATH, os.path.basename(input_data["file_url"]))
-        if os.path.exists(input_path):
-            os.remove(input_path)
-    
     # Get metadata if requested
     metadata = []
     if data.get("metadata"):

@@ -20,13 +20,11 @@ from flask import Blueprint
 from app_utils import *
 import logging
 from services.v1.video.cut import cut_media
-from services.authentication import authenticate
 
 v1_video_cut_bp = Blueprint('v1_video_cut', __name__)
 logger = logging.getLogger(__name__)
 
 @v1_video_cut_bp.route('/v1/video/cut', methods=['POST'])
-@authenticate
 @validate_payload({
     "type": "object",
     "properties": {
@@ -83,19 +81,11 @@ def video_cut(job_id, data):
             audio_bitrate=audio_bitrate
         )
         
-        # Upload the processed file to cloud storage
-        from services.cloud_storage import upload_file
-        cloud_url = upload_file(output_filename)
-        logger.info(f"Job {job_id}: Uploaded output to cloud: {cloud_url}")
-        
-        # Clean up temporary files
-        import os
-        os.remove(input_filename)
-        os.remove(output_filename)
-        logger.info(f"Job {job_id}: Removed temporary files")
+        logger.info(f"Job {job_id}: output_filename: {output_filename}")
+
         
         logger.info(f"Job {job_id}: Video cut operation completed successfully")
-        return cloud_url, "/v1/video/cut", 200
+        return output_filename, "/v1/video/cut", 200
         
     except Exception as e:
         logger.error(f"Job {job_id}: Error during video cut process - {str(e)}")
